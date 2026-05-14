@@ -31,10 +31,29 @@
 
     <script type="text/babel">
       function ChatInput({ chatMessages, setChatMessages }) {
+        const [inputText, setInputText] = React.useState("");
+
+        function SaveInputText(event) {
+          setInputText(event.target.value);
+        }
+
+        function SendMessage() {
+          setChatMessages([
+            ...chatMessages,
+            { message: inputText, sender: "user", id: crypto.randomUUID() },
+          ]);
+          setInputText("");
+        }
+
         return (
           <div>
-            <input placeholder="Send a message to Chatbot" size="30" />
-            <button>Send</button>
+            <input
+              placeholder="Send a message to Chatbot"
+              size="30"
+              onChange={SaveInputText}
+              value={inputText}
+            />
+            <button onClick={SendMessage}>Send</button>
           </div>
         );
       }
@@ -70,7 +89,7 @@
       }
 
       function App() {
-        const chatMessages = [
+        const [chatMessages, setChatMessages] = React.useState([
           {
             message: "hello chatbot",
             sender: "user",
@@ -91,10 +110,13 @@
             sender: "robot",
             id: "id4",
           },
-        ];
+        ]);
         return (
           <>
-            <ChatInput />
+            <ChatInput
+              chatMessages={chatMessages}
+              setChatMessages={setChatMessages}
+            />
             <ChatMessages chatMessages={chatMessages} />
           </>
         );
